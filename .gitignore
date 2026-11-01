@@ -1,0 +1,23 @@
+# Python / FastAPI
+__pycache__/
+*.py[cod]
+venv/
+*.db
+*.sqlite3
+.env
+
+# Flutter
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.iml
+
+# Logs
+*.log

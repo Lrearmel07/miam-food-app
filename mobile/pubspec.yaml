@@ -1,0 +1,45 @@
+name: miam
+description: "Miam — livraison de repas, côté client, livreur, partenaire et admin."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  dio: ^5.11.1
+  provider: ^6.1.5+1
+  shared_preferences: ^2.5.6
+  intl: ^0.20.2
+  flutter_map: ^8.3.2
+  latlong2: ^0.10.1
+  geolocator: ^14.1.2
+  image_picker: ^1.1.2
+  http_parser: ^4.1.0
+  path: ^1.9.0
+  http: ^1.2.0
+  file_picker: ^13.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#FF6B35"
+  adaptive_icon_foreground: "assets/icon_foreground.png"
+  remove_alpha_ios: true

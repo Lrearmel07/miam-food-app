@@ -1,0 +1,196 @@
+# 📘 Guide Complet de l'Application Miam
+## FastAPI + SQLite + Flutter (Mobile, Admin Web, Partenaire Web)
+
+---
+
+## 📑 Table des matières
+1. Vue d'ensemble
+2. Backend FastAPI
+3. Base de données SQLite
+4. API et endpoints
+5. Flutter Mobile
+6. Flutter Web Admin & Partenaire
+7. Upload d'images
+8. Authentification JWT
+9. CORS et sécurité
+10. Déploiement
+
+---
+
+## 1. 🏗️ Vue d'ensemble
+
+L'application Miam est une plateforme de livraison de repas.
+
+Architecture :
+- Backend FastAPI (port 8000)
+- App Mobile Flutter (iOS/Android)
+- Admin Web Flutter (port 8081)
+- Partenaire Web Flutter (port 8082)
+- Base SQLite (food.db)
+
+---
+
+## 2. 🐍 Backend FastAPI
+
+### Structure
+backend/
+├── app/
+│   ├── main.py
+│   ├── api/
+│   │   ├── auth.py
+│   │   ├── admin.py
+│   │   ├── partner.py
+│   │   ├── catalog.py
+│   │   ├── orders.py
+│   │   ├── courier.py
+│   │   └── uploads.py
+│   ├── core/
+│   ├── db/
+│   ├── models.py
+│   ├── schemas.py
+│   └── services/
+├── food.db
+└── requirements.txt
+
+### main.py
+Point d'entrée, CORS, inclusion des routeurs.
+
+### security.py
+- hash_password() : bcrypt
+- create_access_token() : JWT signé
+- verify_password()
+
+### config.py
+Variables d'environnement : DATABASE_URL, SECRET_KEY, CORS_ORIGINS.
+
+---
+
+## 3. 🗄️ Base de données
+
+Tables principales :
+- users (id, email, password_hash, role, avatar_url)
+- restaurants (id, name, cover_image_url, owner_id)
+- products (id, restaurant_id, name, price, image_url)
+- restaurant_images (id, restaurant_id, image_url)
+- product_images (id, product_id, image_url)
+- orders (id, client_id, restaurant_id, status, total)
+- order_items
+- reviews
+- tracking
+
+---
+
+## 4. 🌐 API Endpoints
+
+### Auth
+- POST /api/v1/auth/login
+- POST /api/v1/auth/register
+- GET /api/v1/auth/me
+- PATCH /api/v1/auth/me
+
+### Admin
+- GET /api/v1/admin/restaurants
+- POST /api/v1/admin/restaurants
+- PATCH /api/v1/admin/restaurants/{id}
+- GET /api/v1/admin/restaurants/{id}/gallery
+- POST /api/v1/admin/restaurants/{id}/gallery
+- GET /api/v1/admin/products/{id}/gallery
+- POST /api/v1/admin/products/{id}/gallery
+
+### Partenaire
+- GET /api/v1/partner/restaurant
+- PATCH /api/v1/partner/restaurant
+- GET /api/v1/partner/products
+- POST /api/v1/partner/products
+- PATCH /api/v1/partner/products/{id}
+- DELETE /api/v1/partner/products/{id}
+- GET /api/v1/partner/restaurant/gallery
+- POST /api/v1/partner/restaurant/gallery
+- GET /api/v1/partner/products/{id}/gallery
+- POST /api/v1/partner/products/{id}/gallery
+
+### Catalogue public
+- GET /api/v1/restaurants
+- GET /api/v1/restaurants/{id}/menu
+- GET /api/v1/restaurants/{id}/gallery
+- GET /api/v1/products/{id}/gallery
+
+### Uploads
+- POST /api/v1/uploads (multipart)
+
+---
+
+## 5. 📱 Flutter Mobile
+
+### Structure
+mobile/lib/
+├── main.dart
+├── main_admin.dart
+├── main_partner.dart
+├── core/
+│   ├── api_client.dart
+│   ├── app_state.dart
+│   ├── config.dart
+│   ├── theme.dart
+│   └── format.dart
+├── models/
+├── screens/
+│   ├── client/
+│   ├── admin/
+│   ├── partner/
+│   └── courier/
+└── widgets/
+
+### AppState
+ChangeNotifier global : user, restaurants, cart.
+Méthodes : login(), logout(), loadCatalog().
+
+### ApiClient
+Dio avec intercepteur qui ajoute le token JWT automatiquement.
+
+### Écrans client
+- home_screen.dart : accueil + liste restaurants
+- restaurant_screen.dart : menu + galerie + zoom
+- cart_screen.dart : panier
+- profile_screen.dart : profil + avatar
+
+---
+
+## 6. 🖥️ Flutter Web
+
+### Points d'entrée séparés
+- main_admin.dart → admin web
+- main_partner.dart → partenaire web
+
+### Admin
+- admin_dashboard_screen.dart
+- admin_restaurants_screen.dart
+- admin_users_screen.dart
+- admin_orders_screen.dart
+
+### Partenaire
+- partner_dashboard_screen.dart
+- partner_menu_screen.dart
+- partner_orders_screen.dart
+- gallery_manager_screen.dart
+
+---
+
+## 7. 🖼️ Upload d'images
+
+### Flux complet
+1. FilePicker → sélection fichier
+2. POST /uploads (multipart)
+3. Retourne /uploads/xxx.jpg
+4. POST /gallery avec {image_url}
+5. L'app mobile convertit en URL absolue
+6. Image.network affiche
+
+### Conversion URL
+```dart
+String? _absoluteUrl(String? path) {
+  if (path == null || path.isEmpty) return null;
+  if (path.startsWith('http')) return path;
+  final origin = AppConfig.apiBaseUrl.replaceFirst(RegExp(r'/api/v\d+$'), '');
+  return path.startsWith('/') ? '$origin$path' : '$origin/$path';
+}
