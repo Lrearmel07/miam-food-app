@@ -1,12 +1,12 @@
-# 🍔 Miam - Application de Livraison de Repas
+# Miam - Application de Livraison de Repas
 
 Miam est une plateforme complète de livraison de repas composée de :
-- 📱 **Une application mobile** (Flutter) pour les clients, livreurs et partenaires.
-- 🖥️ **Un site web Admin** (Flutter Web) pour la supervision globale.
-- 🖥️ **Un site web Partenaire** (Flutter Web) pour gérer les restaurants, menus et galeries.
-- ⚙️ **Une API backend** (FastAPI + SQLite) qui fait le lien entre tous les clients.
+- **Une application mobile** (Flutter) pour les clients, livreurs et partenaires.
+-  **Un site web Admin** (Flutter Web) pour la supervision globale.
+-  **Un site web Partenaire** (Flutter Web) pour gérer les restaurants, menus et galeries.
+-  **Une API backend** (FastAPI + SQLite) qui fait le lien entre tous les clients.
 
-## 🏗️ Architecture du projet
+## Architecture du projet
 
 ```text
 miam-food-app/
